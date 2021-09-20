@@ -1,6 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -32,9 +36,28 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
+  void _incrementCounter() async {
     setState(() {
       _counter++;
+    });
+    await FirebaseFirestore.instance
+        .collection('sample')
+        .doc('W1dq8PhEpmyF7LMyjt3Q')
+        .update({'counter': _counter});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future(() async {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('sample')
+          .doc('W1dq8PhEpmyF7LMyjt3Q')
+          .get();
+      setState(() {
+        _counter = snapshot['counter'];
+      });
     });
   }
 
