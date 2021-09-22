@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_auth_ui/flutter_auth_ui.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,6 +78,40 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
+            ),
+            ElevatedButton(
+              child: const Text("start ui"),
+              onPressed: () async {
+                final providers = [
+                  AuthUiProvider.email,
+                  // AuthUiProvider.apple,
+                  // AuthUiProvider.github,
+                  // AuthUiProvider.google,
+                  // AuthUiProvider.microsoft,
+                  // AuthUiProvider.yahoo,
+                ];
+
+                final result = await FlutterAuthUi.startUi(
+                  items: providers,
+                  tosAndPrivacyPolicy: TosAndPrivacyPolicy(
+                    tosUrl: "https://www.google.com",
+                    privacyPolicyUrl: "https://www.google.com",
+                  ),
+                  androidOption: const AndroidOption(
+                    enableSmartLock: false, // default true
+                    showLogo: true, // default false
+                    overrideTheme: true, // default false
+                  ),
+                  emailAuthOption: const EmailAuthOption(
+                    requireDisplayName: true, // default true
+                    enableMailLink: false, // default false
+                    handleURL: '',
+                    androidPackageName: '',
+                    androidMinimumVersion: '',
+                  ),
+                );
+                print(result);
+              },
             ),
           ],
         ),
